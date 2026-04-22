@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 
 type AnswerOption = {
   label: string;
@@ -18,9 +18,9 @@ const QuizPage: React.FC = () => {
   return (
     <section className="quiz-preview-section" aria-labelledby="quiz-title">
       <div className="container quiz-page">
-        <a className="back-link" href="#home">
-          <span>Back to Home</span>
-        </a>
+        <Link className="back-link" to="/">
+          <span>Back to Home</span> 
+        </Link>
 
         <header className="quiz-intro">
           <h2 id="quiz-title">math Assessment</h2>

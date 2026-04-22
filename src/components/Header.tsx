@@ -1,25 +1,28 @@
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <header className="topbar">
-        <div className="container topbar-inner">
-          <a className="brand" href="#home" aria-label="QuizMaster Pro home">
-            <span className="brand-text">QuizMaster Pro</span>
-          </a>
+      <div className="container topbar-inner">
+        <Link className="brand" to="/" aria-label="QuizMaster Pro home">
+          <span className="brand-text">QuizMaster Pro</span>
+        </Link>
 
-          <nav className="topbar-actions" aria-label="Primary">
-            <a className="nav-link" href="#browse">
-              <span>Browse Quizzes</span>
-            </a>
+        <nav className="topbar-actions" aria-label="Primary">
+          <Link className="nav-link" to="/browse">
+            <span>Browse Quizzes</span>
+          </Link>
 
-            <span className="session-pill">Welcome, sd</span>
+          <span className="session-pill">Welcome, user</span>
 
+          <Link to="/login">
             <button className="ghost-button" type="button">
               Logout
             </button>
-          </nav>
-        </div>
-      </header>
+          </Link>
+        </nav>
+      </div>
+    </header>
   );
 };
 

@@ -4,8 +4,7 @@ import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/ResultPage';
 import NotFoundPage from './pages/NotFoundPage';
-import LoginModal from './components/LoginModal';
-import SearchPage from './pages/SearchPage';
+import SearchPage from './pages/BrowsePage';
 
 
 const router = createBrowserRouter([
@@ -21,10 +20,6 @@ const router = createBrowserRouter([
     element: <ResultPage />,
     path: "/result",
   },
-  {
-    element: <LoginModal />,
-    path: "/login",
-  }, 
   {
     element: <SearchPage />,  
     path: "/browse",

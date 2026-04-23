@@ -270,11 +270,14 @@
   padding: 2.5rem 0 5rem;
 }
 
-.modal-backdrop {
-  position: absolute;
+.modal-overlay {
+  position: fixed;
   inset: 0;
-  background: var(--color-bg-backdrop);
-  backdrop-filter: blur(var(--blur-sm));
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modal-wrap {

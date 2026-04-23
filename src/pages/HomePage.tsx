@@ -1,3 +1,10 @@
+import { useState } from "react";
+// import { Link } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
+import LoginModal from "../components/LoginModal";
+import CreateQuiz from "../components/CreateQuiz";
+import Header from "../components/Header";
+
 type Feature = {
   title: string;
   description: string;
@@ -30,61 +37,67 @@ const features: Feature[] = [
 ];
 
 const HomePage = () => {
+  const { isLoggedIn } = useUserStore();
+  const [showLogin, setShowLogin] = useState(false);
+  const [showCreateQuiz, setShowCreateQuiz] = useState(false);
+
+  const handleCreateQuizClick = () => {
+    if (isLoggedIn) {
+      setShowCreateQuiz(true);
+    } else {
+      setShowLogin(true);
+    }
+  };
+
   return (
-    <main>
-      <header className="topbar">
-        <div className="container topbar-inner">
-          <a className="brand" href="#home" aria-label="QuizMaster Pro home">
-            <span className="brand-text">QuizMaster Pro</span>
-          </a>
+    <>
+      <main>
+        <Header />
 
-          <nav className="topbar-actions" aria-label="Primary">
-            <a className="nav-link" href="#browse">
-              <span>Browse Quizzes</span>
-            </a>
+        <section className="hero-section" id="home">
+          <div className="container hero-copy">
+            <p className="eyebrow">Enterprise AI assessment studio</p>
+            <h1>Enterprise AI Quiz Platform</h1>
+            <p className="hero-description">
+              Harness the power of artificial intelligence to create, manage,
+              and analyze professional quizzes. Built for enterprise-scale
+              learning and assessment.
+            </p>
 
-            <span className="session-pill">Welcome, user</span>
-
-            <button className="ghost-button" type="button">
-              Logout
-            </button>
-          </nav>
-        </div>
-      </header>
-
-      <section className="hero-section" id="home">
-        <div className="container hero-copy">
-          <p className="eyebrow">Enterprise AI assessment studio</p>
-          <h1>Enterprise AI Quiz Platform</h1>
-          <p className="hero-description">
-            Harness the power of artificial intelligence to create, manage, and
-            analyze professional quizzes. Built for enterprise-scale learning
-            and assessment.
-          </p>
-
-          <div className="hero-actions">
-            <button className="primary-button" type="button">
-              <span>Create Quiz</span>
-            </button>
+            <div className="hero-actions">
+              <button
+                className="primary-button"
+                type="button"
+                onClick={handleCreateQuizClick}>
+                <span>Create Quiz</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
-      <section className="features-section" aria-labelledby="features-title">
-        <div className="container">
-          <h2 id="features-title">Enterprise Features</h2>
+        </section>
 
-          <div className="feature-grid">
-            {features.map((feature) => (
-              <article className="feature-card" key={feature.title}>
-                <div className="feature-icon" aria-hidden="true"></div>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
-              </article>
-            ))}
+        <section className="features-section" aria-labelledby="features-title">
+          <div className="container">
+            <h2 id="features-title">Enterprise Features</h2>
+
+            <div className="feature-grid">
+              {features.map((feature) => (
+                <article className="feature-card" key={feature.title}>
+                  <div className="feature-icon" aria-hidden="true"></div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+
+      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+
+      {showCreateQuiz && (
+        <CreateQuiz onClose={() => setShowCreateQuiz(false)} />
+      )}
+    </>
   );
 };
 

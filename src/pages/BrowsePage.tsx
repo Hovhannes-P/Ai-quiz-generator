@@ -80,27 +80,12 @@ const difficultyClass: Record<Quiz["difficulty"], string> = {
   Advanced: "badge-advanced",
 };
 
-const SearchPage = () => {
+const BrowsePage = () => {
   return (
     <div className="search-page">
-      <header className="topbar">
-        <div className="container topbar-inner">
-          <Link className="brand" to="/" aria-label="QuizMaster Pro home">
-            <span className="brand-text">QuizMaster Pro</span>
-          </Link>
-          <nav className="topbar-actions" aria-label="Primary">
-            <Link className="nav-link active-link" to="/browse">
-              <span>Browse Quizzes</span>
-            </Link>
-            <span className="session-pill">Welcome, user</span>
-            <Link to="/login">
-              <button className="ghost-button" type="button">
-                Logout
-              </button>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Link className="back-link" to="/">
+        <span>Back to Home</span>
+      </Link>
 
       <main className="search-main">
         <div className="container">
@@ -167,7 +152,7 @@ const SearchPage = () => {
 
           <div className="quiz-grid">
             {mockQuizzes.map((quiz) => (
-              <Link 
+              <Link
                 className="quiz-card"
                 to={`/quiz?id=${quiz.id}`}
                 key={quiz.id}
@@ -226,4 +211,4 @@ const SearchPage = () => {
   );
 };
 
-export default SearchPage;
+export default BrowsePage;

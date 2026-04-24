@@ -27,12 +27,19 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
     });
 
     if (quizData) {
+      const quizToStore = {
+        ...quizData,
+        language: formData.language,
+        hardness: formData.hardness,
+        createdAt: new Date().toISOString(),
+      };
+
       const existingQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-      const updatedQuizzes = [...existingQuizzes, quizData];
+      const updatedQuizzes = [...existingQuizzes, quizToStore];
       localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
 
       onClose();
-      navigate(`/passquiz?id=${quizData.id}`);
+      navigate(`/passquiz?id=${quizToStore.id}`);
     }
   };
 

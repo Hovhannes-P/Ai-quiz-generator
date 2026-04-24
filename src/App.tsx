@@ -5,6 +5,7 @@ import QuizPage from './pages/QuizPage';
 import ResultPage from './pages/ResultPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchPage from './pages/BrowsePage';
+import QuizViewPage from './pages/QuizViewPage';
 
 
 const router = createBrowserRouter([
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
     path: "/passquiz",
   },
   {
-    element: <QuizPage />,
+    element: <QuizViewPage />,
     path: "/quiz",
   },
   {

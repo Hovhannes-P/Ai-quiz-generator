@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, Navigate, useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
 
 type QuizAttempt = {
@@ -11,6 +12,7 @@ type QuizAttempt = {
 };
 
 const QuizPage: React.FC = () => {
+  const { isLoggedIn } = useUserStore();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const quizId = searchParams.get("id");
@@ -20,14 +22,31 @@ const QuizPage: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   // Load quiz data from localStorage on mount
   useEffect(() => {
-    if (!quizId) return;
-    const savedQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-    const foundQuiz = savedQuizzes.find((q: QuizData) => q.id === quizId);
-    if (foundQuiz) setQuiz(foundQuiz);
+    const loadQuiz = async () => {
+      if (!quizId) return;
+
+      try {
+        const response = await fetch("/quizzes.json");
+        const seededQuizzes = response.ok ? ((await response.json()) as QuizData[]) : [];
+        const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as QuizData[];
+        const foundQuiz = [...seededQuizzes, ...savedQuizzes].find((q) => q.id === quizId);
+        if (foundQuiz) {
+          setQuiz(foundQuiz);
+        }
+      } catch (error) {
+        console.error("Failed to load quiz:", error);
+      }
+    };
+
+    loadQuiz();
   }, [quizId]);
 
   if (!quizId) {
     return <Navigate to="/browse" replace />;
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
   }
 
   if (!quiz) {

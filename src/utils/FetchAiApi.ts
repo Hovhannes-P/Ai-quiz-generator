@@ -18,6 +18,9 @@ export interface QuizData {
   id: string;
   topic: string;
   questions: QuizQuestion[];
+  language?: string;
+  hardness?: string;
+  createdAt?: string;
 }
 
 const createGroqClient = () => {

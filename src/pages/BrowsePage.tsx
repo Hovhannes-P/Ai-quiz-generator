@@ -1,89 +1,112 @@
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
+import { type QuizData } from "../utils/FetchAiApi";
 
-type Quiz = {
-  id: string;
-  title: string;
-  topic: string;
-  difficulty: "Beginner" | "Medium" | "Advanced";
-  language: string;
-  questionCount: number;
-  createdAt: string;
-  takenBy?: number;
+type StoredQuiz = QuizData & {
+  language?: string;
+  hardness?: string;
+  createdAt?: string;
 };
 
-const mockQuizzes: Quiz[] = [
-  {
-    id: "1",
-    title: "JavaScript Fundamentals",
-    topic: "JavaScript",
-    difficulty: "Beginner",
-    language: "English",
-    questionCount: 10,
-    createdAt: "2025-06-01",
-    takenBy: 142,
-  },
-  {
-    id: "2",
-    title: "Advanced React Patterns",
-    topic: "React",
-    difficulty: "Advanced",
-    language: "English",
-    questionCount: 15,
-    createdAt: "2025-06-10",
-    takenBy: 89,
-  },
-  {
-    id: "3",
-    title: "World History: Cold War Era",
-    topic: "History",
-    difficulty: "Medium",
-    language: "English",
-    questionCount: 10,
-    createdAt: "2025-05-28",
-    takenBy: 207,
-  },
-  {
-    id: "4",
-    title: "Python Data Structures",
-    topic: "Python",
-    difficulty: "Medium",
-    language: "English",
-    questionCount: 10,
-    createdAt: "2025-06-15",
-    takenBy: 61,
-  },
-  {
-    id: "5",
-    title: "Biología Celular Básica",
-    topic: "Biology",
-    difficulty: "Beginner",
-    language: "Spanish",
-    questionCount: 5,
-    createdAt: "2025-06-12",
-    takenBy: 34,
-  },
-  {
-    id: "6",
-    title: "Machine Learning Concepts",
-    topic: "AI & ML",
-    difficulty: "Advanced",
-    language: "English",
-    questionCount: 15,
-    createdAt: "2025-06-18",
-    takenBy: 55,
-  },
-];
+type SortOption = "date-desc" | "date-asc" | "hardness-asc" | "hardness-desc";
 
-const difficultyClass: Record<Quiz["difficulty"], string> = {
+const difficultyClass: Record<string, string> = {
   Beginner: "badge-beginner",
+  Intermediate: "badge-medium",
   Medium: "badge-medium",
   Advanced: "badge-advanced",
 };
 
+const hardnessRank: Record<string, number> = {
+  Beginner: 1,
+  Medium: 2,
+  Intermediate: 2,
+  Advanced: 3,
+};
+
 const BrowsePage = () => {
+  const { isLoggedIn } = useUserStore();
+  const [quizzes, setQuizzes] = useState<StoredQuiz[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<SortOption>("date-desc");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadQuizzes = async () => {
+      try {
+        const response = await fetch("/quizzes.json");
+        const seededQuizzes = response.ok ? ((await response.json()) as StoredQuiz[]) : [];
+        const localQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as StoredQuiz[];
+
+        const mergedQuizzes = [...seededQuizzes, ...localQuizzes].reduce<StoredQuiz[]>(
+          (acc, quiz) => {
+            if (!acc.some((item) => item.id === quiz.id)) {
+              acc.push({
+                ...quiz,
+                language: quiz.language || "English",
+                hardness: quiz.hardness || "Medium",
+                createdAt: quiz.createdAt || new Date().toISOString(),
+              });
+            }
+            return acc;
+          },
+          []
+        );
+
+        setQuizzes(mergedQuizzes);
+      } catch (error) {
+        console.error("Failed to load quizzes:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadQuizzes();
+  }, []);
+
+  const filteredQuizzes = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return [...quizzes]
+      .filter((quiz) => {
+        const matchesSearch =
+          !normalizedSearch ||
+          quiz.topic.toLowerCase().includes(normalizedSearch) ||
+          quiz.questions.some((question) =>
+            question.question.toLowerCase().includes(normalizedSearch)
+          );
+
+        const matchesDifficulty =
+          difficultyFilter === "all" || (quiz.hardness || "Medium") === difficultyFilter;
+
+        return matchesSearch && matchesDifficulty;
+      })
+      .sort((a, b) => {
+        if (sortBy === "date-desc") {
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        }
+
+        if (sortBy === "date-asc") {
+          return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+        }
+
+        if (sortBy === "hardness-asc") {
+          return (hardnessRank[a.hardness || "Medium"] || 99) - (hardnessRank[b.hardness || "Medium"] || 99);
+        }
+
+        return (hardnessRank[b.hardness || "Medium"] || 0) - (hardnessRank[a.hardness || "Medium"] || 0);
+      });
+  }, [difficultyFilter, quizzes, searchTerm, sortBy]);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div className="search-page">
-      <Link className="back-link" to="/">
+      <Link className="back-link browse-back-link" to="/">
         <span>Back to Home</span>
       </Link>
 
@@ -91,27 +114,26 @@ const BrowsePage = () => {
         <div className="container">
           <div className="search-heading">
             <p className="eyebrow">Quiz Library</p>
-            <h1 className="search-title">Browse Quizzes</h1>
+            <h1 className="search-title">Search and Explore Quizzes</h1>
             <p className="search-subtitle">
-              Explore the collection of AI-generated assessments. Filter by
-              topic, difficulty, or language.
+              Browse pre-generated quizzes and your own AI-created quizzes by topic,
+              keyword, difficulty, and date.
             </p>
           </div>
 
           <div className="search-controls">
             <div className="search-input-wrap">
-              <svg
-                className="search-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true">
+              <svg className="search-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" />
                 <path d="M16.5 16.5 21 21" />
               </svg>
               <input
                 className="search-input"
                 type="search"
-                placeholder="Search by topic or keyword…"
+                placeholder="Search by topic or question keyword..."
                 aria-label="Search quizzes"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
               />
             </div>
 
@@ -122,11 +144,13 @@ const BrowsePage = () => {
               <select
                 className="filter-select"
                 id="sort-select"
-                defaultValue="date-desc">
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value as SortOption)}
+              >
                 <option value="date-desc">Newest first</option>
                 <option value="date-asc">Oldest first</option>
-                <option value="difficulty-asc">Easiest first</option>
-                <option value="difficulty-desc">Hardest first</option>
+                <option value="hardness-asc">Easiest first</option>
+                <option value="hardness-desc">Hardest first</option>
               </select>
             </div>
 
@@ -137,9 +161,12 @@ const BrowsePage = () => {
               <select
                 className="filter-select"
                 id="difficulty-filter"
-                defaultValue="all">
+                value={difficultyFilter}
+                onChange={(event) => setDifficultyFilter(event.target.value)}
+              >
                 <option value="all">All levels</option>
                 <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
                 <option value="Medium">Medium</option>
                 <option value="Advanced">Advanced</option>
               </select>
@@ -147,64 +174,77 @@ const BrowsePage = () => {
           </div>
 
           <p className="results-count">
-            Showing <strong>{mockQuizzes.length}</strong> quizzes
+            {loading ? "Loading quizzes..." : <>Showing <strong>{filteredQuizzes.length}</strong> quizzes</>}
           </p>
 
-          <div className="quiz-grid">
-            {mockQuizzes.map((quiz) => (
-              <Link
-                className="quiz-card"
-                to={`/quiz?id=${quiz.id}`}
-                key={quiz.id}
-                aria-label={`View quiz: ${quiz.title}`}>
-                <div className="quiz-card-top">
-                  <span
-                    className={`difficulty-badge ${difficultyClass[quiz.difficulty]}`}>
-                    {quiz.difficulty}
-                  </span>
-                  <span className="quiz-lang">{quiz.language}</span>
-                </div>
+          {!loading && filteredQuizzes.length === 0 ? (
+            <div className="empty-state-card">
+              <h2>No quizzes found</h2>
+              <p>Try another keyword or create a new quiz from the homepage.</p>
+            </div>
+          ) : (
+            <div className="quiz-grid">
+              {filteredQuizzes.map((quiz) => {
+                const difficulty = quiz.hardness || "Medium";
 
-                <h3 className="quiz-card-title">{quiz.title}</h3>
-                <p className="quiz-card-topic">{quiz.topic}</p>
+                return (
+                  <Link
+                    className="quiz-card"
+                    to={`/quiz?id=${quiz.id}`}
+                    key={quiz.id}
+                    aria-label={`View quiz: ${quiz.topic}`}
+                  >
+                    <div className="quiz-card-top">
+                      <span className={`difficulty-badge ${difficultyClass[difficulty] || "badge-medium"}`}>
+                        {difficulty}
+                      </span>
+                      <span className="quiz-lang">{quiz.language || "English"}</span>
+                    </div>
 
-                <div className="quiz-card-meta">
-                  <span className="meta-item">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="M12 7v5l3 3" />
-                    </svg>
-                    {quiz.questionCount} questions
-                  </span>
-                  <span className="meta-item">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    {quiz.takenBy} taken
-                  </span>
-                  <span className="meta-item">
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                      <line x1="16" y1="2" x2="16" y2="6" />
-                      <line x1="8" y1="2" x2="8" y2="6" />
-                      <line x1="3" y1="10" x2="21" y2="10" />
-                    </svg>
-                    {new Date(quiz.createdAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
+                    <h3 className="quiz-card-title">{quiz.topic}</h3>
+                    <p className="quiz-card-topic">
+                      {quiz.questions.length} questions ready to review or take
+                    </p>
 
-                <div className="quiz-card-footer">
-                  <span className="card-cta">View Quiz →</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+                    <div className="quiz-card-meta">
+                      <span className="meta-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <circle cx="12" cy="12" r="9" />
+                          <path d="M12 7v5l3 3" />
+                        </svg>
+                        {quiz.questions.length} questions
+                      </span>
+                      <span className="meta-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        {quiz.language || "English"}
+                      </span>
+                      <span className="meta-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                          <line x1="16" y1="2" x2="16" y2="6" />
+                          <line x1="8" y1="2" x2="8" y2="6" />
+                          <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        {new Date(quiz.createdAt || Date.now()).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+
+                    <div className="quiz-card-footer">
+                      <span className="card-cta">Open Quiz View</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </main>
     </div>

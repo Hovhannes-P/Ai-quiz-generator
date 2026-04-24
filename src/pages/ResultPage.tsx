@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
 
 type QuizAttempt = {
@@ -10,18 +12,55 @@ type QuizAttempt = {
 };
 
 const ResultPage = () => {
+  const { isLoggedIn } = useUserStore();
   const [searchParams] = useSearchParams();
   const quizId = searchParams.get("id");
+  const [quiz, setQuiz] = useState<QuizData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadQuiz = async () => {
+      if (!quizId) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/quizzes.json");
+        const seededQuizzes = response.ok ? ((await response.json()) as QuizData[]) : [];
+        const localQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as QuizData[];
+        const foundQuiz = [...seededQuizzes, ...localQuizzes].find((item) => item.id === quizId) || null;
+        setQuiz(foundQuiz);
+      } catch (error) {
+        console.error("Failed to load result quiz:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadQuiz();
+  }, [quizId]);
 
   if (!quizId) {
     return <Navigate to="/" replace />;
   }
 
-  const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]");
-  const savedAttempts = JSON.parse(localStorage.getItem("quiz-attempts") || "{}");
+  if (!isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
 
-  const quiz = savedQuizzes.find((item: QuizData) => item.id === quizId) as QuizData | undefined;
+  const savedAttempts = JSON.parse(localStorage.getItem("quiz-attempts") || "{}");
   const attempt = savedAttempts[quizId] as QuizAttempt | undefined;
+
+  if (loading) {
+    return (
+      <section className="results-preview-section" aria-labelledby="results-title">
+        <div className="container results-card">
+          <h2 id="results-title">Loading result...</h2>
+        </div>
+      </section>
+    );
+  }
 
   if (!quiz || !attempt) {
     return (

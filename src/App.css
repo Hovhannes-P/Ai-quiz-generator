@@ -25,13 +25,21 @@
 .ambient-left {
   top: 0;
   left: -10vw;
-  background: radial-gradient(circle, rgba(79, 126, 255, 0.32), transparent 68%);
+  background: radial-gradient(
+    circle,
+    rgba(79, 126, 255, 0.32),
+    transparent 68%
+  );
 }
 
 .ambient-right {
   top: 12vh;
   right: -12vw;
-  background: radial-gradient(circle, rgba(103, 232, 249, 0.2), transparent 68%);
+  background: radial-gradient(
+    circle,
+    rgba(103, 232, 249, 0.2),
+    transparent 68%
+  );
 }
 
 .topbar {
@@ -235,7 +243,11 @@
   border: var(--color-border-1px) solid var(--color-border-light);
   border-radius: var(--radius-lg);
   padding: 2rem 1.25rem 1.6rem;
-  background: linear-gradient(180deg, var(--color-bg-card) 0%, var(--color-bg-dark) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-card) 0%,
+    var(--color-bg-dark) 100%
+  );
   box-shadow: 0 var(--spacing-md) 24px rgba(0, 0, 0, 0.22);
   text-align: center;
 }
@@ -685,7 +697,6 @@
   }
 }
 
-
 /* ── Search Page ─────────────────────────────────────────── */
 
 .active-link {
@@ -968,3 +979,21 @@
     padding: 2.5rem 0 4rem;
   }
 }
+
+.login-toggle-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+.login-toggle-container button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-decoration: underline;
+}
+.login-toggle-container p {
+ margin: 0; 
+}
+

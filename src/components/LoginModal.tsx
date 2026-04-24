@@ -7,11 +7,13 @@ interface LoginModalProps {
 }
 
 const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
+  const [isLogin, setIsLogin] = useState(true);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const login = useUserStore((state) => state.login);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim()) return;
     login(username.trim());
@@ -19,10 +21,27 @@ const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
     onSuccess?.();
   };
 
+  const toggleView = () => {
+    setIsLogin(!isLogin);
+    setUsername("");
+    setPassword("");
+  };
+
   return (
-    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
-      <div className="quiz-modal login-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" type="button" aria-label="Close modal" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="login-modal-title">
+      <div
+        className="quiz-modal login-modal"
+        onClick={(e) => e.stopPropagation()}>
+        <button
+          className="modal-close"
+          type="button"
+          aria-label="Close modal"
+          onClick={onClose}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -30,11 +49,31 @@ const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
         </button>
 
         <div className="modal-header">
-          <h2 id="login-modal-title">Welcome Back</h2>
-          <p>Sign in to create and manage your quizzes</p>
+          <h2 id="login-modal-title">
+            {isLogin ? "Welcome Back" : "Create an Account"}
+          </h2>
+          <p>
+            {isLogin
+              ? "Sign in to create and manage your quizzes"
+              : "Sign up to start creating your own AI quizzes"}
+          </p>
         </div>
 
-        <form className="quiz-form login-form" onSubmit={handleLogin}>
+        <form className="quiz-form login-form" onSubmit={handleSubmit}>
+          {!isLogin && (
+            <label className="field field-full">
+              <span>FullName</span>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                autoComplete="name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </label>
+          )}
+
           <label className="field field-full">
             <span>Username</span>
             <input
@@ -43,6 +82,7 @@ const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
               autoComplete="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              required
             />
           </label>
 
@@ -51,18 +91,26 @@ const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
             <input
               type="password"
               placeholder="Enter your password"
-              autoComplete="current-password"
+              autoComplete={isLogin ? "current-password" : "new-password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </label>
 
           <button className="primary-button primary-button-full" type="submit">
-            Sign In
+            {isLogin ? "Sign In" : "Sign Up"}
           </button>
         </form>
 
-        <p className="login-hint">Demo: use any username &amp; password to log in</p>
+        <div className="login-toggle-container">
+          <p>
+            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            <button type="button" onClick={toggleView}>
+              {isLogin ? "Sign Up" : "Sign In"}
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

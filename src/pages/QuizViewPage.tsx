@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
+import BackLink from "../components/BackLink";
 
 type StoredQuiz = QuizData & {
   language?: string;
@@ -89,9 +90,7 @@ const QuizViewPage = () => {
   return (
     <section className="quiz-preview-section">
       <div className="container quiz-page">
-        <Link className="back-link" to="/browse">
-          <span>Back to Search</span>
-        </Link>
+        <BackLink to="/browse" label="Back to Search" />
 
         <header className="quiz-intro quiz-view-intro">
           <p className="eyebrow">Quiz View</p>

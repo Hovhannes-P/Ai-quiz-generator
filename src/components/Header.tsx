@@ -4,7 +4,7 @@ import { useState } from "react";
 import LoginModal from "./LoginModal";
 
 interface HeaderProps {
-  onLoginSuccess?: () => void; 
+  onLoginSuccess?: () => void;
 }
 
 const Header = ({ onLoginSuccess }: HeaderProps) => {
@@ -20,19 +20,22 @@ const Header = ({ onLoginSuccess }: HeaderProps) => {
           </Link>
 
           <nav className="topbar-actions" aria-label="Primary">
-            <Link className="nav-link" to="/browse">
-              <span>Browse Quizzes</span>
-            </Link>
-
             {isLoggedIn ? (
               <>
+                <Link className="nav-link" to="/browse">
+                  <span>Browse Quizzes</span>
+                </Link>
+
                 <span className="session-pill">Welcome, {username}</span>
                 <button className="ghost-button" type="button" onClick={logout}>
                   Logout
                 </button>
               </>
             ) : (
-              <button className="ghost-button" type="button" onClick={() => setShowLogin(true)}>
+              <button
+                className="ghost-button"
+                type="button"
+                onClick={() => setShowLogin(true)}>
                 Login
               </button>
             )}

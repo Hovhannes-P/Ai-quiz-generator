@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
+import BackLink from "../components/BackLink";
 
 type QuizAttempt = {
   quizId: string;
@@ -55,8 +56,10 @@ const ResultPage = () => {
   if (loading) {
     return (
       <section className="results-preview-section" aria-labelledby="results-title">
-        <div className="container results-card">
-          <h2 id="results-title">Loading result...</h2>
+        <div className="container quiz-page">
+          <div className="results-card">
+            <h2 id="results-title">Loading result...</h2>
+          </div>
         </div>
       </section>
     );
@@ -65,18 +68,20 @@ const ResultPage = () => {
   if (!quiz || !attempt) {
     return (
       <section className="results-preview-section" aria-labelledby="results-title">
-        <div className="container results-card">
-          <h2 id="results-title">Result not found</h2>
-          <p className="result-summary">
-            We could not find a completed attempt for this quiz yet.
-          </p>
-          <div className="result-actions">
-            <Link to="/" className="dark-button">
-              Return Home
-            </Link>
-            <Link to={`/passquiz?id=${quizId}`} className="light-button">
-              Take Quiz
-            </Link>
+        <div className="container quiz-page">
+          <div className="results-card">
+            <h2 id="results-title">Result not found</h2>
+            <p className="result-summary">
+              We could not find a completed attempt for this quiz yet.
+            </p>
+            <div className="result-actions">
+              <Link to="/" className="dark-button">
+                Return Home
+              </Link>
+              <Link to={`/passquiz?id=${quizId}`} className="light-button">
+                Take Quiz
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -88,9 +93,7 @@ const ResultPage = () => {
   return (
     <section className="results-preview-section" aria-labelledby="results-title">
       <div className="container quiz-page">
-        <Link className="back-link" to="/">
-          <span>Back to Home</span>
-        </Link>
+        <BackLink to="/" label="Back to Home" />
 
         <div className="results-card">
           <div className="result-mark" aria-hidden="true"></div>

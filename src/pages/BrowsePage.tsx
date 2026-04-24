@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
+import BackLink from "../components/BackLink";
 
 type StoredQuiz = QuizData & {
   language?: string;
@@ -106,12 +107,10 @@ const BrowsePage = () => {
 
   return (
     <div className="search-page">
-      <Link className="back-link browse-back-link" to="/">
-        <span>Back to Home</span>
-      </Link>
-
       <main className="search-main">
-        <div className="container">
+        <div className="container quiz-page">
+          <BackLink className="browse-back-link" to="/" label="Back to Home" />
+
           <div className="search-heading">
             <p className="eyebrow">Quiz Library</p>
             <h1 className="search-title">Search and Explore Quizzes</h1>
@@ -141,35 +140,45 @@ const BrowsePage = () => {
               <label className="filter-label" htmlFor="sort-select">
                 Sort by
               </label>
-              <select
-                className="filter-select"
-                id="sort-select"
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as SortOption)}
-              >
-                <option value="date-desc">Newest first</option>
-                <option value="date-asc">Oldest first</option>
-                <option value="hardness-asc">Easiest first</option>
-                <option value="hardness-desc">Hardest first</option>
-              </select>
+              <div className="select-shell">
+                <select
+                  className="filter-select"
+                  id="sort-select"
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value as SortOption)}
+                >
+                  <option value="date-desc">Newest first</option>
+                  <option value="date-asc">Oldest first</option>
+                  <option value="hardness-asc">Easiest first</option>
+                  <option value="hardness-desc">Hardest first</option>
+                </select>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </div>
             </div>
 
             <div className="filter-group">
               <label className="filter-label" htmlFor="difficulty-filter">
                 Difficulty
               </label>
-              <select
-                className="filter-select"
-                id="difficulty-filter"
-                value={difficultyFilter}
-                onChange={(event) => setDifficultyFilter(event.target.value)}
-              >
-                <option value="all">All levels</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Medium">Medium</option>
-                <option value="Advanced">Advanced</option>
-              </select>
+              <div className="select-shell">
+                <select
+                  className="filter-select"
+                  id="difficulty-filter"
+                  value={difficultyFilter}
+                  onChange={(event) => setDifficultyFilter(event.target.value)}
+                >
+                  <option value="all">All levels</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </div>
             </div>
           </div>
 

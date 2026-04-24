@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams, Navigate, useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import { type QuizData } from "../utils/FetchAiApi";
+import BackLink from "../components/BackLink";
 
 type QuizAttempt = {
   quizId: string;
@@ -96,7 +97,7 @@ const QuizPage: React.FC = () => {
   return (
     <section className="quiz-preview-section">
       <div className="container quiz-page">
-        <Link className="back-link" to="/"><span>Back to Home</span></Link>
+        <BackLink to="/" label="Back to Home" />
 
         <header className="quiz-intro">
           <h2>{quiz.topic}</h2>

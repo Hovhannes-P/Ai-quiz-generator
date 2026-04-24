@@ -19,12 +19,16 @@ const QuizPage: React.FC = () => {
   const quizId = searchParams.get("id");
 
   const [quiz, setQuiz] = useState<QuizData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  // Load quiz data from localStorage on mount
+
   useEffect(() => {
     const loadQuiz = async () => {
-      if (!quizId) return;
+      if (!quizId) {
+        setLoading(false);
+        return;
+      }
 
       try {
         const response = await fetch("/quizzes.json");
@@ -36,6 +40,8 @@ const QuizPage: React.FC = () => {
         }
       } catch (error) {
         console.error("Failed to load quiz:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -48,6 +54,16 @@ const QuizPage: React.FC = () => {
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
+  }
+
+  if (loading) {
+    return (
+      <section className="quiz-preview-section">
+        <div className="container quiz-page">
+          <p className="result-summary">Loading quiz...</p>
+        </div>
+      </section>
+    );
   }
 
   if (!quiz) {

@@ -238,7 +238,7 @@ const BrowsePage = () => {
                           <line x1="8" y1="2" x2="8" y2="6" />
                           <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                        {new Date(quiz.createdAt || Date.now()).toLocaleDateString("en-US", {
+                        {new Date(quiz.createdAt || 0).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",

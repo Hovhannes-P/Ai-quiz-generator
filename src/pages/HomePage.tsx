@@ -137,7 +137,15 @@ const HomePage = () => {
         </section>
       </main>
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={() => {
+            setShowLogin(false);
+            setShowCreateQuiz(true);
+          }}
+        />
+      )}
 
       {showCreateQuiz && (
         <CreateQuiz onClose={() => setShowCreateQuiz(false)} />

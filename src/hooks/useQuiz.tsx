@@ -17,12 +17,18 @@ export const useQuiz = (): UseQuizReturn => {
     
     try {
       const data = await fetchQuiz(formData);
+      if (!data) {
+        setError("Failed to generate quiz. Check your AI API configuration and try again.");
+        setLoading(false);
+        return null;
+      }
+
       setLoading(false);
       return data; 
-    } catch (err) {
+    } catch {
       setError("Failed to generate quiz. Please try again.");
       setLoading(false);
-      throw err;
+      return null;
     }
   };
 

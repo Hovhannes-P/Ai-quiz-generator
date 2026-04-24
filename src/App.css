@@ -499,6 +499,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
+  margin: 1rem 0 1.75rem;
   color: #f2f4fa;
   font-weight: var(--font-weight-600);
   transition:
@@ -662,12 +663,12 @@
 }
 
 .results-card {
-  width: min(100%, 900px);
+  width: 100%;
   border: var(--color-border-1px) solid var(--color-border-light);
-  border-radius: var(--radius-2xl);
-  padding: 2.8rem 2rem 2.1rem;
+  border-radius: var(--radius-xl);
+  padding: 1.8rem 1.5rem;
   background: var(--gradient-result);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 var(--size-icon-lg) 40px rgba(0, 0, 0, 0.18);
   text-align: center;
 }
 

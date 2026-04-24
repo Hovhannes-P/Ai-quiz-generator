@@ -8,8 +8,9 @@ interface HeaderProps {
 }
 
 const Header = ({ onLoginSuccess }: HeaderProps) => {
-  const { isLoggedIn, username, logout } = useUserStore();
+  const { isLoggedIn, name, email, logout } = useUserStore();
   const [showLogin, setShowLogin] = useState(false);
+  const displayName = name || email;
 
   return (
     <>
@@ -26,7 +27,7 @@ const Header = ({ onLoginSuccess }: HeaderProps) => {
                   <span>Browse Quizzes</span>
                 </Link>
 
-                <span className="session-pill">Welcome, {username}</span>
+                <span className="session-pill">Welcome, {displayName}</span>
                 <button className="ghost-button" type="button" onClick={logout}>
                   Logout
                 </button>

@@ -9,21 +9,24 @@ interface LoginModalProps {
 const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
   const [isLogin, setIsLogin] = useState(true);
 
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const login = useUserStore((state) => state.login);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username.trim()) return;
-    login(username.trim());
+    if (!email.trim()) return;
+    if (!isLogin && !name.trim()) return;
+    login(email.trim(), isLogin ? null : name.trim());
     onClose();
     onSuccess?.();
   };
 
   const toggleView = () => {
     setIsLogin(!isLogin);
-    setUsername("");
+    setName("");
+    setEmail("");
     setPassword("");
   };
 
@@ -62,26 +65,26 @@ const LoginModal = ({ onClose, onSuccess }: LoginModalProps) => {
         <form className="quiz-form login-form" onSubmit={handleSubmit}>
           {!isLogin && (
             <label className="field field-full">
-              <span>FullName</span>
+              <span>Name</span>
               <input
                 type="text"
                 placeholder="Enter your full name"
                 autoComplete="name"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </label>
           )}
 
           <label className="field field-full">
-            <span>Username</span>
+            <span>Email</span>
             <input
-              type="text"
-              placeholder="Enter your username"
-              autoComplete="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </label>

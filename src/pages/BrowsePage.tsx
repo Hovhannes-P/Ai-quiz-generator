@@ -12,16 +12,17 @@ type StoredQuiz = QuizData & {
 
 type SortOption = "date-desc" | "date-asc" | "hardness-asc" | "hardness-desc";
 
+const normalizeDifficulty = (value?: string) =>
+  value === "Medium" || !value ? "Intermediate" : value;
+
 const difficultyClass: Record<string, string> = {
   Beginner: "badge-beginner",
   Intermediate: "badge-medium",
-  Medium: "badge-medium",
   Advanced: "badge-advanced",
 };
 
 const hardnessRank: Record<string, number> = {
   Beginner: 1,
-  Medium: 2,
   Intermediate: 2,
   Advanced: 3,
 };
@@ -47,7 +48,7 @@ const BrowsePage = () => {
               acc.push({
                 ...quiz,
                 language: quiz.language || "English",
-                hardness: quiz.hardness || "Medium",
+                hardness: normalizeDifficulty(quiz.hardness),
                 createdAt: quiz.createdAt || new Date().toISOString(),
               });
             }
@@ -80,7 +81,7 @@ const BrowsePage = () => {
           );
 
         const matchesDifficulty =
-          difficultyFilter === "all" || (quiz.hardness || "Medium") === difficultyFilter;
+          difficultyFilter === "all" || normalizeDifficulty(quiz.hardness) === difficultyFilter;
 
         return matchesSearch && matchesDifficulty;
       })
@@ -94,10 +95,10 @@ const BrowsePage = () => {
         }
 
         if (sortBy === "hardness-asc") {
-          return (hardnessRank[a.hardness || "Medium"] || 99) - (hardnessRank[b.hardness || "Medium"] || 99);
+          return (hardnessRank[normalizeDifficulty(a.hardness)] || 99) - (hardnessRank[normalizeDifficulty(b.hardness)] || 99);
         }
 
-        return (hardnessRank[b.hardness || "Medium"] || 0) - (hardnessRank[a.hardness || "Medium"] || 0);
+        return (hardnessRank[normalizeDifficulty(b.hardness)] || 0) - (hardnessRank[normalizeDifficulty(a.hardness)] || 0);
       });
   }, [difficultyFilter, quizzes, searchTerm, sortBy]);
 
@@ -172,7 +173,6 @@ const BrowsePage = () => {
                   <option value="all">All levels</option>
                   <option value="Beginner">Beginner</option>
                   <option value="Intermediate">Intermediate</option>
-                  <option value="Medium">Medium</option>
                   <option value="Advanced">Advanced</option>
                 </select>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -194,7 +194,7 @@ const BrowsePage = () => {
           ) : (
             <div className="quiz-grid">
               {filteredQuizzes.map((quiz) => {
-                const difficulty = quiz.hardness || "Medium";
+                const difficulty = normalizeDifficulty(quiz.hardness);
 
                 return (
                   <Link

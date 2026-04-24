@@ -18,6 +18,9 @@ type QuizAttempt = {
   completedAt: string;
 };
 
+const normalizeDifficulty = (value?: string) =>
+  value === "Medium" || !value ? "Intermediate" : value;
+
 const QuizViewPage = () => {
   const { isLoggedIn } = useUserStore();
   const [searchParams] = useSearchParams();
@@ -96,7 +99,7 @@ const QuizViewPage = () => {
           <p className="eyebrow">Quiz View</p>
           <h2>{quiz.topic}</h2>
           <p>
-            {quiz.language || "English"} • {quiz.hardness || "Medium"} • {quiz.questions.length} questions
+            {quiz.language || "English"} • {normalizeDifficulty(quiz.hardness)} • {quiz.questions.length} questions
           </p>
         </header>
 

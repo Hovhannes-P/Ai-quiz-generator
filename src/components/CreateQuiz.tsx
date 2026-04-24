@@ -14,7 +14,7 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
     topic: '',
     language: 'English',
     numQuestions: 5,
-    hardness: 'Medium',
+    hardness: 'Intermediate',
     specialRequests: ''
   });
 
@@ -129,7 +129,7 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
                   onChange={(e) => setFormData({...formData, hardness: e.target.value})}
                 >
                   <option>Beginner</option>
-                  <option>Medium</option>
+                  <option>Intermediate</option>
                   <option>Advanced</option>
                 </select>
                 <svg viewBox="0 0 24 24" aria-hidden="true">

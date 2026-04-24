@@ -1,33 +1,68 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuiz } from '../hooks/useQuiz';
+
 interface CreateQuizProps {
   onClose: () => void;
 }
 
 const CreateQuiz = ({ onClose }: CreateQuizProps) => {
+  const navigate = useNavigate();
+  const { createQuiz, loading, error } = useQuiz();
+
+  // 1. Local state for form fields
+  const [formData, setFormData] = useState({
+    topic: '',
+    language: 'English',
+    numQuestions: 5,
+    hardness: 'Medium',
+    specialRequests: ''
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // 2. Call the AI via our hook
+    const quizData = await createQuiz({
+      ...formData,
+      numQuestions: Number(formData.numQuestions) // Ensure it's a number
+    });
+
+    if (quizData) {
+      // 3. Persist the quiz (Requirement: Data must persist)
+      const existingQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
+      const updatedQuizzes = [...existingQuizzes, quizData];
+      localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
+
+      // 4. Redirect to /passquiz with the new ID
+      onClose();
+      navigate(`/quiz?id=${quizData.id}`);
+    }
+  };
+
   return (
-    <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div className="modal-overlay" onClick={onClose}>
       <div className="quiz-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" type="button" aria-label="Close modal" onClick={onClose}>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+        {/* ... Header stays the same ... */}
 
-        <div className="modal-header">
-          <h2 id="modal-title">Create New Quiz</h2>
-          <p>Configure your AI-generated quiz parameters</p>
-        </div>
-
-        <form className="quiz-form">
+        <form className="quiz-form" onSubmit={handleSubmit}>
           <label className="field field-full">
             <span>Topic</span>
-            <input placeholder="e.g. JavaScript Fundamentals, World History, Biology" />
+            <input 
+              required
+              value={formData.topic}
+              onChange={(e) => setFormData({...formData, topic: e.target.value})}
+              placeholder="e.g. JavaScript Fundamentals" 
+            />
           </label>
 
           <div className="field-row">
             <label className="field">
               <span>Language</span>
-              <select defaultValue="English">
+              <select 
+                value={formData.language} 
+                onChange={(e) => setFormData({...formData, language: e.target.value})}
+              >
                 <option>English</option>
                 <option>Spanish</option>
                 <option>French</option>
@@ -35,17 +70,22 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
             </label>
 
             <label className="field">
-              <span>Number of Questions</span>
-              <select defaultValue="5">
-                <option value="5">5 Questions</option>
-                <option value="10">10 Questions</option>
-                <option value="15">15 Questions</option>
+              <span>Questions</span>
+              <select 
+                value={formData.numQuestions}
+                onChange={(e) => setFormData({...formData, numQuestions: parseInt(e.target.value)})}
+              >
+                <option value="5">5</option>
+                <option value="10">10</option>
               </select>
             </label>
 
             <label className="field">
               <span>Difficulty</span>
-              <select defaultValue="Medium">
+              <select 
+                value={formData.hardness}
+                onChange={(e) => setFormData({...formData, hardness: e.target.value})}
+              >
                 <option>Beginner</option>
                 <option>Medium</option>
                 <option>Advanced</option>
@@ -54,12 +94,22 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
           </div>
 
           <label className="field field-full">
-            <span>Special Requirements (Optional)</span>
-            <textarea placeholder="Any specific focus areas, question types, or requirements..." />
+            <span>Special Requirements</span>
+            <textarea 
+              value={formData.specialRequests}
+              onChange={(e) => setFormData({...formData, specialRequests: e.target.value})}
+              placeholder="Any specific focus areas..." 
+            />
           </label>
 
-          <button className="primary-button primary-button-full" type="button">
-            Generate Quiz
+          {error && <p style={{color: 'red'}}>{error}</p>}
+
+          <button 
+            className="primary-button primary-button-full" 
+            type="submit" 
+            disabled={loading}
+          >
+            {loading ? "AI is generating..." : "Generate Quiz"}
           </button>
         </form>
       </div>

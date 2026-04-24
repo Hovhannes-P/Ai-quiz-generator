@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const ResultPage = () => {
   return (
     <section
@@ -34,9 +36,11 @@ const ResultPage = () => {
         </div>
 
         <div className="result-actions">
-          <button className="dark-button" type="button">
-            Return Home
-          </button>
+          <Link to="/">
+            <button className="dark-button" type="button">
+              Return Home
+            </button>
+          </Link>
 
           <button className="light-button" type="button">
             Review Answers

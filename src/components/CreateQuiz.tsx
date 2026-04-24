@@ -10,7 +10,6 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
   const navigate = useNavigate();
   const { createQuiz, loading, error } = useQuiz();
 
-  // 1. Local state for form fields
   const [formData, setFormData] = useState({
     topic: '',
     language: 'English',
@@ -22,28 +21,24 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 2. Call the AI via our hook
     const quizData = await createQuiz({
       ...formData,
-      numQuestions: Number(formData.numQuestions) // Ensure it's a number
+      numQuestions: Number(formData.numQuestions)
     });
 
     if (quizData) {
-      // 3. Persist the quiz (Requirement: Data must persist)
       const existingQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
       const updatedQuizzes = [...existingQuizzes, quizData];
       localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
 
-      // 4. Redirect to /passquiz with the new ID
       onClose();
-      navigate(`/quiz?id=${quizData.id}`);
+      navigate(`/passquiz?id=${quizData.id}`);
     }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="quiz-modal" onClick={(e) => e.stopPropagation()}>
-        {/* ... Header stays the same ... */}
 
         <form className="quiz-form" onSubmit={handleSubmit}>
           <label className="field field-full">

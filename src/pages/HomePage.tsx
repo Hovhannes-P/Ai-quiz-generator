@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import { Link } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import LoginModal from "../components/LoginModal";
 import CreateQuiz from "../components/CreateQuiz";

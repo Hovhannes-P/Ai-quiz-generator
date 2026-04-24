@@ -1,8 +1,6 @@
 import { useState } from 'react';
-// Import BOTH QuizParams and QuizData from your API file
 import { fetchQuiz, type QuizData, type QuizParams, } from '../utils/FetchAiApi';
 
-// Define the return type for our hook
 interface UseQuizReturn {
   createQuiz: (formData: QuizParams) => Promise<QuizData | null>;
   loading: boolean;
@@ -18,7 +16,6 @@ export const useQuiz = (): UseQuizReturn => {
     setError(null);
     
     try {
-      // Data is now automatically typed as QuizData | null
       const data = await fetchQuiz(formData);
       setLoading(false);
       return data; 

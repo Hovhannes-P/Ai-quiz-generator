@@ -1,6 +1,5 @@
 import Groq from "groq-sdk";
 
-// EXPORT these interfaces so your hook can use them
 export interface QuizParams {
   topic: string;
   language: string;
@@ -21,7 +20,6 @@ export interface QuizData {
   questions: QuizQuestion[];
 }
 
-// Lazily create a Groq client only when an API key is available.
 const createGroqClient = () => {
   try {
     const apiKey = import.meta.env.VITE_GROQ_API_KEY;
@@ -33,9 +31,7 @@ const createGroqClient = () => {
   }
 };
 
-/**
- * Fetches the generated quiz from the Groq API.
- */
+
 export const fetchQuiz = async (params: QuizParams): Promise<QuizData | null> => {
   const { topic, language, numQuestions, hardness, specialRequests } = params;
 
@@ -86,7 +82,6 @@ export const fetchQuiz = async (params: QuizParams): Promise<QuizData | null> =>
       return null;
     }
     
-    // Parse and return the strongly-typed data
     const quizData: QuizData = JSON.parse(content);
     return quizData;
     

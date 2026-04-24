@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams, Navigate } from "react-router-dom";
+import { Link, useSearchParams, Navigate, useNavigate } from "react-router-dom";
 import { type QuizData } from "../utils/FetchAiApi";
 
+type QuizAttempt = {
+  quizId: string;
+  selectedAnswers: string[];
+  score: number;
+  totalQuestions: number;
+  completedAt: string;
+};
+
 const QuizPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const quizId = searchParams.get("id");
 
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
-  const [isFinished, setIsFinished] = useState(false);
-
   // Load quiz data from localStorage on mount
   useEffect(() => {
     if (!quizId) return;
@@ -19,7 +26,6 @@ const QuizPage: React.FC = () => {
     if (foundQuiz) setQuiz(foundQuiz);
   }, [quizId]);
 
-  // Redirect to browse if no id provided
   if (!quizId) {
     return <Navigate to="/browse" replace />;
   }
@@ -47,23 +53,26 @@ const QuizPage: React.FC = () => {
     if (currentIndex < quiz.questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setIsFinished(true);
-      // Save the result to localStorage for the "Quiz View" page later!
+      const score = selectedAnswers.reduce(
+        (acc, ans, idx) => (ans === quiz.questions[idx].correctAnswer ? acc + 1 : acc),
+        0
+      );
+
+      const attempt: QuizAttempt = {
+        quizId: quiz.id,
+        selectedAnswers,
+        score,
+        totalQuestions: quiz.questions.length,
+        completedAt: new Date().toISOString(),
+      };
+
+      const savedAttempts = JSON.parse(localStorage.getItem("quiz-attempts") || "{}");
+      savedAttempts[quiz.id] = attempt;
+      localStorage.setItem("quiz-attempts", JSON.stringify(savedAttempts));
+
+      navigate(`/result?id=${quiz.id}`);
     }
   };
-
-  if (isFinished) {
-    const score = selectedAnswers.reduce((acc, ans, idx) => 
-      ans === quiz.questions[idx].correctAnswer ? acc + 1 : acc, 0
-    );
-    return (
-      <div className="container">
-        <h2>Quiz Complete!</h2>
-        <p>Your Score: {score} / {quiz.questions.length}</p>
-        <Link to="/" className="primary-button">Back to Home</Link>
-      </div>
-    );
-  }
 
   return (
     <section className="quiz-preview-section">

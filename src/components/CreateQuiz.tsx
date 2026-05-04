@@ -8,7 +8,7 @@ interface CreateQuizProps {
 
 const CreateQuiz = ({ onClose }: CreateQuizProps) => {
   const navigate = useNavigate();
-  const { createQuiz, loading, error } = useQuiz();
+  const { createQuiz, loading, error, isConfigured } = useQuiz();
 
   const [formData, setFormData] = useState({
     topic: '',
@@ -70,6 +70,14 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
         </div>
 
         <form className="quiz-form" onSubmit={handleSubmit}>
+          {!isConfigured && (
+            <div className="form-note" role="status" aria-live="polite">
+              <strong>Demo mode:</strong> AI generation is unavailable until
+              `VITE_GROQ_API_KEY` is configured. You can still explore the app by
+              browsing the seeded quizzes from the library.
+            </div>
+          )}
+
           <label className="field field-full">
             <span>Topic</span>
             <input 
@@ -156,7 +164,7 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
             type="submit" 
             disabled={loading}
           >
-            {loading ? "AI is generating..." : "Generate Quiz"}
+            {loading ? "AI is generating..." : isConfigured ? "Generate Quiz" : "Try AI Generation"}
           </button>
         </form>
       </div>

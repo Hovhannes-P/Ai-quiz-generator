@@ -23,6 +23,22 @@ export interface QuizData {
   createdAt?: string;
 }
 
+export class QuizGenerationError extends Error {
+  code: "missing_api_key" | "invalid_response" | "request_failed";
+
+  constructor(
+    code: "missing_api_key" | "invalid_response" | "request_failed",
+    message: string
+  ) {
+    super(message);
+    this.name = "QuizGenerationError";
+    this.code = code;
+  }
+}
+
+export const isAiQuizConfigured = () =>
+  Boolean(import.meta.env.VITE_GROQ_API_KEY?.trim());
+
 const createGroqClient = () => {
   try {
     const apiKey = import.meta.env.VITE_GROQ_API_KEY;
@@ -64,8 +80,10 @@ export const fetchQuiz = async (params: QuizParams): Promise<QuizData | null> =>
   try {
     const groq = createGroqClient();
     if (!groq) {
-      console.error("GROQ client not configured. Set VITE_GROQ_API_KEY in your environment.");
-      return null;
+      throw new QuizGenerationError(
+        "missing_api_key",
+        "AI quiz generation is not configured in this environment."
+      );
     }
 
     const response = await groq.chat.completions.create({
@@ -79,17 +97,27 @@ export const fetchQuiz = async (params: QuizParams): Promise<QuizData | null> =>
     });
 
     const content = response.choices[0]?.message?.content;
-    
+
     if (!content) {
       console.error("No content in response");
-      return null;
+      throw new QuizGenerationError(
+        "invalid_response",
+        "The AI service returned an empty response."
+      );
     }
-    
+
     const quizData: QuizData = JSON.parse(content);
     return quizData;
-    
+
   } catch (error) {
+    if (error instanceof QuizGenerationError) {
+      throw error;
+    }
+
     console.error("Error generating quiz with Groq:", error);
-    return null;
+    throw new QuizGenerationError(
+      "request_failed",
+      "Quiz generation failed while contacting the AI service."
+    );
   }
 };

@@ -5,7 +5,7 @@ interface UserState {
   email: string | null;
   name: string | null;
   isLoggedIn: boolean;
-  login: (email: string, name?: string | null) => void;
+  login: (profile: { name: string; email?: string | null }) => void;
   logout: () => void;
 }
 
@@ -15,13 +15,14 @@ export const useUserStore = create<UserState>()(
       email: null,
       name: null,
       isLoggedIn: false,
-      login: (email, name = null) => set({ email, name, isLoggedIn: true }),
+      login: ({ name, email = null }) =>
+        set({
+          email,
+          name: name.trim(),
+          isLoggedIn: true,
+        }),
       logout: () => {
         set({ email: null, name: null, isLoggedIn: false });
-
-        if (typeof window !== "undefined") {
-          window.localStorage.clear();
-        }
       },
     }),
     {

@@ -10,7 +10,7 @@ interface HeaderProps {
 const Header = ({ onLoginSuccess }: HeaderProps) => {
   const { isLoggedIn, name, email, logout } = useUserStore();
   const [showLogin, setShowLogin] = useState(false);
-  const displayName = name || email;
+  const displayName = name || email || "Guest";
 
   return (
     <>
@@ -27,9 +27,9 @@ const Header = ({ onLoginSuccess }: HeaderProps) => {
                   <span>Browse Quizzes</span>
                 </Link>
 
-                <span className="session-pill">Welcome, {displayName}</span>
+                <span className="session-pill">Local session: {displayName}</span>
                 <button className="ghost-button" type="button" onClick={logout}>
-                  Logout
+                  End Session
                 </button>
               </>
             ) : (
@@ -37,7 +37,7 @@ const Header = ({ onLoginSuccess }: HeaderProps) => {
                 className="ghost-button"
                 type="button"
                 onClick={() => setShowLogin(true)}>
-                Login
+                Start Session
               </button>
             )}
           </nav>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../hooks/useQuiz';
+import { saveQuiz } from '../utils/quizStore';
 
 interface CreateQuizProps {
   onClose: () => void;
@@ -34,10 +35,7 @@ const CreateQuiz = ({ onClose }: CreateQuizProps) => {
         createdAt: new Date().toISOString(),
       };
 
-      const existingQuizzes = JSON.parse(localStorage.getItem('quizzes') || '[]');
-      const updatedQuizzes = [...existingQuizzes, quizToStore];
-      localStorage.setItem('quizzes', JSON.stringify(updatedQuizzes));
-
+      saveQuiz(quizToStore);
       onClose();
       navigate(`/passquiz?id=${quizToStore.id}`);
     }

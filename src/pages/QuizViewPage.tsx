@@ -1,25 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
-import { type QuizData } from "../utils/FetchAiApi";
 import BackLink from "../components/BackLink";
-
-type StoredQuiz = QuizData & {
-  language?: string;
-  hardness?: string;
-  createdAt?: string;
-};
-
-type QuizAttempt = {
-  quizId: string;
-  selectedAnswers: string[];
-  score: number;
-  totalQuestions: number;
-  completedAt: string;
-};
-
-const normalizeDifficulty = (value?: string) =>
-  value === "Medium" || !value ? "Intermediate" : value;
+import {
+  getQuizAttempt,
+  loadQuizById,
+  normalizeDifficulty,
+  type StoredQuiz,
+} from "../utils/quizStore";
 
 const QuizViewPage = () => {
   const { isLoggedIn } = useUserStore();
@@ -36,12 +24,7 @@ const QuizViewPage = () => {
       }
 
       try {
-        const response = await fetch("/quizzes.json");
-        const seededQuizzes = response.ok ? ((await response.json()) as StoredQuiz[]) : [];
-        const localQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as StoredQuiz[];
-        const allQuizzes = [...seededQuizzes, ...localQuizzes];
-        const foundQuiz = allQuizzes.find((item) => item.id === quizId) || null;
-        setQuiz(foundQuiz);
+        setQuiz(await loadQuizById(quizId));
       } catch (error) {
         console.error("Failed to load quiz view:", error);
       } finally {
@@ -84,8 +67,7 @@ const QuizViewPage = () => {
     );
   }
 
-  const savedAttempts = JSON.parse(localStorage.getItem("quiz-attempts") || "{}") as Record<string, QuizAttempt>;
-  const previousAttempt = savedAttempts[quiz.id];
+  const previousAttempt = getQuizAttempt(quiz.id);
   const percentage = previousAttempt
     ? Math.round((previousAttempt.score / previousAttempt.totalQuestions) * 100)
     : null;

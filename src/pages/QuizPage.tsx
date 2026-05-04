@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, Navigate, useNavigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
-import { type QuizData } from "../utils/FetchAiApi";
 import BackLink from "../components/BackLink";
-
-type QuizAttempt = {
-  quizId: string;
-  selectedAnswers: string[];
-  score: number;
-  totalQuestions: number;
-  completedAt: string;
-};
+import {
+  loadQuizById,
+  saveQuizAttempt,
+  type StoredQuiz,
+} from "../utils/quizStore";
 
 const QuizPage: React.FC = () => {
   const { isLoggedIn } = useUserStore();
@@ -18,7 +14,7 @@ const QuizPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const quizId = searchParams.get("id");
 
-  const [quiz, setQuiz] = useState<QuizData | null>(null);
+  const [quiz, setQuiz] = useState<StoredQuiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -31,13 +27,7 @@ const QuizPage: React.FC = () => {
       }
 
       try {
-        const response = await fetch("/quizzes.json");
-        const seededQuizzes = response.ok ? ((await response.json()) as QuizData[]) : [];
-        const savedQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as QuizData[];
-        const foundQuiz = [...seededQuizzes, ...savedQuizzes].find((q) => q.id === quizId);
-        if (foundQuiz) {
-          setQuiz(foundQuiz);
-        }
+        setQuiz(await loadQuizById(quizId));
       } catch (error) {
         console.error("Failed to load quiz:", error);
       } finally {
@@ -94,7 +84,7 @@ const QuizPage: React.FC = () => {
         0
       );
 
-      const attempt: QuizAttempt = {
+      const attempt = {
         quizId: quiz.id,
         selectedAnswers,
         score,
@@ -102,10 +92,7 @@ const QuizPage: React.FC = () => {
         completedAt: new Date().toISOString(),
       };
 
-      const savedAttempts = JSON.parse(localStorage.getItem("quiz-attempts") || "{}");
-      savedAttempts[quiz.id] = attempt;
-      localStorage.setItem("quiz-attempts", JSON.stringify(savedAttempts));
-
+      saveQuizAttempt(attempt);
       navigate(`/result?id=${quiz.id}`);
     }
   };

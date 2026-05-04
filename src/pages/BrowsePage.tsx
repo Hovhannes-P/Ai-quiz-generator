@@ -1,19 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
-import { type QuizData } from "../utils/FetchAiApi";
 import BackLink from "../components/BackLink";
-
-type StoredQuiz = QuizData & {
-  language?: string;
-  hardness?: string;
-  createdAt?: string;
-};
+import {
+  loadQuizzes as fetchAllQuizzes,
+  normalizeDifficulty,
+  type StoredQuiz,
+} from "../utils/quizStore";
 
 type SortOption = "date-desc" | "date-asc" | "hardness-asc" | "hardness-desc";
-
-const normalizeDifficulty = (value?: string) =>
-  value === "Medium" || !value ? "Intermediate" : value;
 
 const difficultyClass: Record<string, string> = {
   Beginner: "badge-beginner",
@@ -36,28 +31,9 @@ const BrowsePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadQuizzes = async () => {
+    const fetchQuizzes = async () => {
       try {
-        const response = await fetch("/quizzes.json");
-        const seededQuizzes = response.ok ? ((await response.json()) as StoredQuiz[]) : [];
-        const localQuizzes = JSON.parse(localStorage.getItem("quizzes") || "[]") as StoredQuiz[];
-
-        const mergedQuizzes = [...seededQuizzes, ...localQuizzes].reduce<StoredQuiz[]>(
-          (acc, quiz) => {
-            if (!acc.some((item) => item.id === quiz.id)) {
-              acc.push({
-                ...quiz,
-                language: quiz.language || "English",
-                hardness: normalizeDifficulty(quiz.hardness),
-                createdAt: quiz.createdAt || new Date().toISOString(),
-              });
-            }
-            return acc;
-          },
-          []
-        );
-
-        setQuizzes(mergedQuizzes);
+        setQuizzes(await fetchAllQuizzes());
       } catch (error) {
         console.error("Failed to load quizzes:", error);
       } finally {
@@ -65,7 +41,7 @@ const BrowsePage = () => {
       }
     };
 
-    loadQuizzes();
+    fetchQuizzes();
   }, []);
 
   const filteredQuizzes = useMemo(() => {

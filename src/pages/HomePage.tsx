@@ -12,25 +12,25 @@ type Feature = {
 
 const features: Feature[] = [
   {
-    title: "AI-Powered",
+    title: "AI Quiz Generation",
     description:
-      "Advanced AI generates contextual questions based on your specifications.",
+      "Generate topic-based quizzes with configurable language, difficulty, and question count.",
     icon: "brain",
   },
   {
-    title: "Multi-Language",
-    description: "Create quizzes in multiple languages for global teams.",
+    title: "Saved Quiz Library",
+    description: "Browse seeded quizzes and revisit quizzes created during your practice session.",
     icon: "users",
   },
   {
-    title: "Performance Analytics",
+    title: "Answer Review",
     description:
-      "Detailed insights and performance tracking for all assessments.",
+      "Finish a quiz and review which answers were correct, incorrect, or skipped.",
     icon: "trophy",
   },
   {
-    title: "Scalable Platform",
-    description: "Enterprise-grade infrastructure supporting unlimited users.",
+    title: "Frontend Practice Focus",
+    description: "Built to practice routing, state, async UI, local persistence, and custom styling.",
     icon: "trend",
   },
 ];
@@ -99,12 +99,12 @@ const HomePage = () => {
 
         <section className="hero-section" id="home">
           <div className="container hero-copy">
-            <p className="eyebrow">Enterprise AI assessment studio</p>
-            <h1>Enterprise AI Quiz Platform</h1>
+            <p className="eyebrow">React + TypeScript practice project</p>
+            <h1>Build and take AI-generated quizzes</h1>
             <p className="hero-description">
-              Harness the power of artificial intelligence to create, manage,
-              and analyze professional quizzes. Built for enterprise-scale
-              learning and assessment.
+              A portfolio-focused frontend app for generating quizzes, browsing saved sets,
+              completing attempts, and reviewing results. This project highlights practical
+              React skills rather than pretending to be a full business product.
             </p>
 
             <div className="hero-actions">
@@ -112,7 +112,7 @@ const HomePage = () => {
                 className="primary-button"
                 type="button"
                 onClick={handleCreateQuizClick}>
-                <span>Create Quiz</span>
+                <span>Generate a Quiz</span>
               </button>
             </div>
           </div>
@@ -120,7 +120,7 @@ const HomePage = () => {
 
         <section className="features-section" aria-labelledby="features-title">
           <div className="container">
-            <h2 id="features-title">Enterprise Features</h2>
+            <h2 id="features-title">What This Project Shows</h2>
 
             <div className="feature-grid">
               {features.map((feature) => (

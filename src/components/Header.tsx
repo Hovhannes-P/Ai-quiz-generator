@@ -16,8 +16,8 @@ const Header = ({ onLoginSuccess }: HeaderProps) => {
     <>
       <header className="topbar">
         <div className="container topbar-inner">
-          <Link className="brand" to="/" aria-label="QuizMaster Pro home">
-            <span className="brand-text">QuizMaster Pro</span>
+          <Link className="brand" to="/" aria-label="AI Quiz Lab home">
+            <span className="brand-text">AI Quiz Lab</span>
           </Link>
 
           <nav className="topbar-actions" aria-label="Primary">

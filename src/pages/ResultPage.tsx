@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import BackLink from "../components/BackLink";
+import { type StoredQuiz } from "../types/quiz";
 import {
   getQuizAttempt,
   loadQuizById,
-  type StoredQuiz,
 } from "../utils/quizStore";
 
 const ResultPage = () => {

@@ -2,25 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useUserStore } from "../store/userStore";
 import BackLink from "../components/BackLink";
+import { type StoredQuiz } from "../types/quiz";
 import {
   loadQuizzes as fetchAllQuizzes,
   normalizeDifficulty,
-  type StoredQuiz,
 } from "../utils/quizStore";
-
-type SortOption = "date-desc" | "date-asc" | "hardness-asc" | "hardness-desc";
-
-const difficultyClass: Record<string, string> = {
-  Beginner: "badge-beginner",
-  Intermediate: "badge-medium",
-  Advanced: "badge-advanced",
-};
-
-const hardnessRank: Record<string, number> = {
-  Beginner: 1,
-  Intermediate: 2,
-  Advanced: 3,
-};
+import {
+  difficultyClass,
+  filterAndSortQuizzes,
+  formatQuizDate,
+  type SortOption,
+} from "../utils/browseQuizUtils";
 
 const BrowsePage = () => {
   const { isLoggedIn } = useUserStore();
@@ -45,37 +37,7 @@ const BrowsePage = () => {
   }, []);
 
   const filteredQuizzes = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
-
-    return [...quizzes]
-      .filter((quiz) => {
-        const matchesSearch =
-          !normalizedSearch ||
-          quiz.topic.toLowerCase().includes(normalizedSearch) ||
-          quiz.questions.some((question) =>
-            question.question.toLowerCase().includes(normalizedSearch)
-          );
-
-        const matchesDifficulty =
-          difficultyFilter === "all" || normalizeDifficulty(quiz.hardness) === difficultyFilter;
-
-        return matchesSearch && matchesDifficulty;
-      })
-      .sort((a, b) => {
-        if (sortBy === "date-desc") {
-          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
-        }
-
-        if (sortBy === "date-asc") {
-          return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
-        }
-
-        if (sortBy === "hardness-asc") {
-          return (hardnessRank[normalizeDifficulty(a.hardness)] || 99) - (hardnessRank[normalizeDifficulty(b.hardness)] || 99);
-        }
-
-        return (hardnessRank[normalizeDifficulty(b.hardness)] || 0) - (hardnessRank[normalizeDifficulty(a.hardness)] || 0);
-      });
+    return filterAndSortQuizzes({ quizzes, searchTerm, difficultyFilter, sortBy });
   }, [difficultyFilter, quizzes, searchTerm, sortBy]);
 
   if (!isLoggedIn) {
@@ -214,11 +176,7 @@ const BrowsePage = () => {
                           <line x1="8" y1="2" x2="8" y2="6" />
                           <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
-                        {new Date(quiz.createdAt || 0).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {formatQuizDate(quiz.createdAt)}
                       </span>
                     </div>
 

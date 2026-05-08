@@ -1,18 +1,4 @@
-import { type QuizData } from "./FetchAiApi";
-
-export type StoredQuiz = QuizData & {
-  language?: string;
-  hardness?: string;
-  createdAt?: string;
-};
-
-export type QuizAttempt = {
-  quizId: string;
-  selectedAnswers: string[];
-  score: number;
-  totalQuestions: number;
-  completedAt: string;
-};
+import { type QuizAttempt, type StoredQuiz } from "../types/quiz";
 
 const QUIZZES_STORAGE_KEY = "quizzes";
 const QUIZ_ATTEMPTS_STORAGE_KEY = "quiz-attempts";

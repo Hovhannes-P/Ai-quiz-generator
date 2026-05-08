@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../hooks/useQuiz';
+import { type QuizParams } from '../types/quiz';
 import { saveQuiz } from '../utils/quizStore';
 
 interface CreateQuizProps {
   onClose: () => void;
 }
 
+type CreateQuizFormData = QuizParams;
+
 const CreateQuiz = ({ onClose }: CreateQuizProps) => {
   const navigate = useNavigate();
   const { createQuiz, loading, error, isConfigured } = useQuiz();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateQuizFormData>({
     topic: '',
     language: 'English',
     numQuestions: 5,

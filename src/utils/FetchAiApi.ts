@@ -1,27 +1,5 @@
 import Groq from "groq-sdk";
-
-export interface QuizParams {
-  topic: string;
-  language: string;
-  numQuestions: number;
-  hardness: string;
-  specialRequests?: string;
-}
-
-export interface QuizQuestion {
-  question: string;
-  options: string[];
-  correctAnswer: string;
-}
-
-export interface QuizData {
-  id: string;
-  topic: string;
-  questions: QuizQuestion[];
-  language?: string;
-  hardness?: string;
-  createdAt?: string;
-}
+import { type QuizData, type QuizParams } from "../types/quiz";
 
 export class QuizGenerationError extends Error {
   code: "missing_api_key" | "invalid_response" | "request_failed";

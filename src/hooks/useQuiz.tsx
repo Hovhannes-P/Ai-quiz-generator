@@ -3,9 +3,8 @@ import {
   fetchQuiz,
   isAiQuizConfigured,
   QuizGenerationError,
-  type QuizData,
-  type QuizParams,
 } from '../utils/FetchAiApi';
+import { type QuizData, type QuizParams } from '../types/quiz';
 
 interface UseQuizReturn {
   createQuiz: (formData: QuizParams) => Promise<QuizData | null>;

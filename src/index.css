@@ -1,0 +1,223 @@
+:root {
+  /* ── Color Palette ──────────────────────────────────────── */
+  --color-bg-primary: #090b10;
+  --color-bg-secondary: #0d1118;
+  --color-bg-dark: #10131c;
+  --color-bg-darker: #111522;
+  --color-bg-card: rgba(24, 29, 40, 0.9);
+  --color-bg-card-alt: rgba(22, 27, 38, 0.92);
+  --color-bg-input: rgba(255, 255, 255, 0.04);
+  --color-bg-input-focus: rgba(255, 255, 255, 0.08);
+  --color-bg-topbar: rgba(12, 14, 20, 0.88);
+  --color-bg-modal: rgba(22, 26, 36, 0.98);
+  --color-bg-modal-alt: rgba(14, 18, 26, 0.98);
+  --color-bg-question: rgba(19, 23, 32, 0.98);
+  --color-bg-question-alt: rgba(13, 17, 25, 0.98);
+  --color-bg-result: rgba(19, 24, 34, 0.98);
+  --color-bg-result-alt: rgba(12, 16, 23, 0.98);
+  --color-bg-answer: rgba(255, 255, 255, 0.03);
+  --color-bg-button-secondary: rgba(255, 255, 255, 0.02);
+  --color-bg-backdrop: rgba(7, 10, 15, 0.56);
+  --color-bg-quiz-card: rgba(22, 27, 38, 0.92);
+  --color-bg-quiz-card-alt: rgba(14, 18, 27, 0.96);
+
+  --color-primary: #5f8dff;
+  --color-primary-dark: #4872f0;
+  --color-primary-darker: #3a5ec4;
+  --color-primary-light: #7ba3ff;
+  
+  --color-accent-cyan: #67e8f9;
+  --color-accent-blue: #87a3ff;
+  --color-accent-green: #34d399;
+  --color-accent-yellow: #fbbf24;
+  --color-accent-red: #f87171;
+
+  --color-text-primary: #f1f4fc;
+  --color-text-secondary: #e8edf7;
+  --color-text-white: #ffffff;
+  --color-text-white-95: rgba(255, 255, 255, 0.95);
+  --color-text-muted: #a3afc5;
+  --color-text-muted-alt: #9aa5bb;
+  --color-text-muted-light: #9ca7bb;
+  --color-text-muted-subtle: #8a95ac;
+  --color-text-subtle: #7a8499;
+  --color-text-faded: #7a8a9e;
+  --color-text-faded-more: #6a7a8e;
+  --color-text-faded-least: #5a6a7e;
+  --color-text-faded-lighter: #a8b2c4;
+  --color-text-86: rgba(232, 237, 247, 0.86);
+  --color-text-88: rgba(237, 241, 255, 0.88);
+  --color-text-96: rgba(241, 244, 252, 0.96);
+  --color-text-dark: #111421;
+
+  --color-border-light: #4a5569;
+  --color-border-lighter: #3a4559;
+  --color-border-subtle: #3a4456;
+  --color-border-muted: #2a3547;
+  --color-border-very-light: rgba(255, 255, 255, 0.08);
+  --color-border-1px: 1px;
+  --color-border-2px: 2px;
+
+  /* ── Spacing ────────────────────────────────────────────── */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+
+  /* ── Typography ──────────────────────────────────────────– */
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  background: var(--color-bg-primary);
+  color: #eef2ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+
+  --font-size-sm: 0.78rem;
+  --font-size-xs: 0.82rem;
+  --font-size-md: 0.85rem;
+  --font-size-base: 0.88rem;
+  --font-size-lg: 0.92rem;
+  --font-size-xl: 0.95rem;
+  --font-size-2xl: 1rem;
+  --font-size-3xl: 1.02rem;
+  --font-size-4xl: 1.04rem;
+  --font-size-5xl: 1.05rem;
+  --font-size-6xl: 1.2rem;
+  --font-size-display: clamp(1.7rem, 2.4vw, 2rem);
+  --font-size-display-lg: clamp(1.8rem, 2.8vw, 2.45rem);
+  --font-size-display-xl: clamp(2rem, 3vw, 2.55rem);
+  --font-size-display-2xl: clamp(2.4rem, 4.5vw, 3.8rem);
+  --font-size-display-3xl: clamp(3rem, 5.6vw, 4.55rem);
+  --font-size-display-4xl: clamp(3.6rem, 6vw, 5rem);
+
+  --line-height-tight: 0.9;
+  --line-height-tighter: 0.98;
+  --line-height-normal: 1.3;
+  --line-height-relaxed: 1.55;
+  --line-height-loose: 1.6;
+
+  --letter-spacing-tight: -0.05em;
+  --letter-spacing-tighter: -0.04em;
+  --letter-spacing-tight-sm: -0.03em;
+  --letter-spacing-tight-xs: -0.025em;
+  --letter-spacing-tight-2: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.04em;
+  --letter-spacing-wider: 0.08em;
+
+  /* ── Border Radius ──────────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 100px;
+  --radius-full: 50%;
+
+  /* ── Sizes ──────────────────────────────────────────────– */
+  --size-button-sm: 32px;
+  --size-button-md: 40px;
+  --size-button-lg: 48px;
+  --size-button-lg2: 56px;
+  --size-button-xl: 96px;
+  --size-icon-sm: 13px;
+  --size-icon-md: 15px;
+  --size-icon-lg: 20px;
+  --size-icon-2xl: 24px;
+  --size-icon-3xl: 60px;
+  --size-search-icon: 17px;
+  --size-radio: 24px;
+
+  /* ── Transitions ────────────────────────────────────────– */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 250ms ease-out;
+
+  /* ── Shadows ────────────────────────────────────────────– */
+  --shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 22px 55px rgba(0, 0, 0, 0.28);
+  --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --shadow-primary: 0 10px 28px rgba(72, 114, 240, 0.28);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+  /* ── Blurs ──────────────────────────────────────────────– */
+  --blur-sm: 2px;
+  --blur-lg: 80px;
+
+  /* ── Container ──────────────────────────────────────────– */
+  --container-width: 1120px;
+  --container-padding: 48px;
+  --container-padding-sm: 28px;
+
+  /* ── Opacity ────────────────────────────────────────────– */
+  --opacity-disabled: 0.46;
+  --opacity-hover: 0.26;
+  --opacity-10: 0.1;
+  --opacity-12: 0.12;
+  --opacity-16: 0.16;
+  --opacity-2: 0.02;
+
+  /* ── Z-Index ────────────────────────────────────────────– */
+  --z-ambient: 0;
+  --z-main: 1;
+  --z-sticky: 30;
+
+  /* ── Gradients ──────────────────────────────────────────– */
+  --gradient-primary: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  --gradient-progress: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-darker) 100%);
+  --gradient-brand: linear-gradient(180deg, #1a2030 0%, #111522 100%);
+  --gradient-question: linear-gradient(180deg, rgba(19, 23, 32, 0.98) 0%, rgba(13, 17, 25, 0.98) 100%);
+  --gradient-result: linear-gradient(180deg, rgba(19, 24, 34, 0.98) 0%, rgba(12, 16, 23, 0.98) 100%);
+  --gradient-modal: linear-gradient(180deg, rgba(22, 26, 36, 0.98) 0%, rgba(14, 18, 26, 0.98) 100%);
+  --gradient-quiz-card: linear-gradient(180deg, rgba(22, 27, 38, 0.92) 0%, rgba(14, 18, 27, 0.96) 100%);
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(88, 133, 255, 0.14), transparent 32%),
+    radial-gradient(circle at 80% 0%, rgba(52, 211, 153, 0.08), transparent 24%),
+    linear-gradient(180deg, #090b10 0%, #0d1118 42%, #090b10 100%);
+  color: #eef2ff;
+  line-height: var(--line-height-relaxed);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#root {
+  min-height: 100vh;
+}

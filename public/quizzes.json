@@ -1,0 +1,79 @@
+[
+  {
+    "id": "seed-js-basics",
+    "topic": "JavaScript Fundamentals",
+    "language": "English",
+    "hardness": "Beginner",
+    "createdAt": "2026-04-10T09:30:00.000Z",
+    "questions": [
+      {
+        "question": "Which keyword declares a block-scoped variable in JavaScript?",
+        "options": ["var", "const", "define", "static"],
+        "correctAnswer": "const"
+      },
+      {
+        "question": "What is the result type of `typeof []` in JavaScript?",
+        "options": ["array", "object", "list", "undefined"],
+        "correctAnswer": "object"
+      },
+      {
+        "question": "Which method converts a JSON string into a JavaScript object?",
+        "options": ["JSON.parse()", "JSON.stringify()", "Object.parse()", "Array.from()"],
+        "correctAnswer": "JSON.parse()"
+      }
+    ]
+  },
+  {
+    "id": "seed-react-intermediate",
+    "topic": "React Component Patterns",
+    "language": "English",
+    "hardness": "Intermediate",
+    "createdAt": "2026-04-18T14:15:00.000Z",
+    "questions": [
+      {
+        "question": "What is the main purpose of props in React?",
+        "options": ["To mutate global state", "To pass data into components", "To replace hooks", "To style elements directly"],
+        "correctAnswer": "To pass data into components"
+      },
+      {
+        "question": "Which hook is used for side effects such as fetching data?",
+        "options": ["useReducer", "useRef", "useEffect", "useContext"],
+        "correctAnswer": "useEffect"
+      },
+      {
+        "question": "Why is assigning a stable `key` important when rendering lists?",
+        "options": ["It improves CSS specificity", "It lets React track item identity efficiently", "It enables routing", "It prevents hooks from running"],
+        "correctAnswer": "It lets React track item identity efficiently"
+      },
+      {
+        "question": "What is a common benefit of extracting reusable UI into smaller components?",
+        "options": ["It removes the need for props", "It prevents re-renders entirely", "It improves readability and reuse", "It replaces state management"],
+        "correctAnswer": "It improves readability and reuse"
+      }
+    ]
+  },
+  {
+    "id": "seed-python-advanced",
+    "topic": "Python Data Structures",
+    "language": "English",
+    "hardness": "Advanced",
+    "createdAt": "2026-04-21T11:00:00.000Z",
+    "questions": [
+      {
+        "question": "Which data structure guarantees unique keys mapped to values in Python?",
+        "options": ["list", "tuple", "dictionary", "set"],
+        "correctAnswer": "dictionary"
+      },
+      {
+        "question": "Which operation is typically O(1) average time in a Python set?",
+        "options": ["Membership testing", "Sorting all items", "Finding maximum manually", "Reversing insertion order"],
+        "correctAnswer": "Membership testing"
+      },
+      {
+        "question": "What does slicing a list with `[::-1]` do?",
+        "options": ["Removes duplicates", "Returns every second item", "Reverses the list", "Sorts descending"],
+        "correctAnswer": "Reverses the list"
+      }
+    ]
+  }
+]

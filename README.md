@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# AI Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript practice project focused on building an interactive quiz experience with AI-generated content, client-side routing, local persistence, and a polished UI.
 
-Currently, two official plugins are available:
+This project is not meant to be a production SaaS app. It is a portfolio piece that shows how I work with modern frontend tools, state management, async flows, and reusable UI patterns.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What This App Does
 
-## React Compiler
+- Generates quizzes from a topic, language, difficulty, and question count
+- Lets users browse seeded quizzes and quizzes they created locally
+- Runs quiz attempts with progress tracking and answer selection
+- Saves quiz history and results in `localStorage`
+- Shows a detailed result screen with answer review
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What I Practiced
 
-## Expanding the ESLint configuration
+- Building a multi-page React app with `react-router-dom`
+- Writing the app in TypeScript with typed quiz data
+- Managing session state with Zustand
+- Handling async API flows and loading states
+- Persisting user-generated data in the browser
+- Structuring reusable components and page-level views
+- Styling a custom interface without relying on a component library
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- TypeScript
+- Vite
+- React Router
+- Zustand
+- Groq SDK
+- CSS
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Project Structure
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+  components/   Reusable UI like the header, modal, and quiz form
+  hooks/        Custom hooks for quiz generation flows
+  pages/        Route-level screens
+  store/        Zustand session store
+  utils/        API and shared data utilities
+public/
+  quizzes.json  Seed quiz data used by the app
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Running Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+Open the local Vite URL shown in the terminal.
+
+## Environment Variables
+
+To enable AI quiz generation, create a `.env` file in the project root:
+
+```bash
+VITE_GROQ_API_KEY=your_api_key_here
+```
+
+Without this variable, the seeded quizzes and locally saved quizzes still work, but AI generation will not.
+
+## Available Scripts
+
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
+
+## Important Notes
+
+- Authentication in this version is demo-only and stored locally in the browser
+- Quiz data and attempt history are stored in `localStorage`
+- The AI request is currently made from the client for learning purposes
+- This repo is aimed at showing frontend practice, not production architecture
+
